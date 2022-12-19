@@ -15,7 +15,7 @@ depends: [
   "ocaml"
   "dune" {>= "3.5"}
   "ANSITerminal"
-  "amr"
+  "libcaml-amr"
   "containers"
   "yojson"
   "libcaml-conll"
