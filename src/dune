@@ -1,0 +1,5 @@
+(executable
+ (name grewpy_backend)
+ (public_name grewpy_backend)
+ (package grewpy_backend)
+ (libraries ANSITerminal str amr containers threads yojson conll libgrew))
