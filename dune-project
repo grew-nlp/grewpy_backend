@@ -1,7 +1,7 @@
 (lang dune 3.5)
 
 (name grewpy_backend)
-(version 0.1.1)
+(version 0.1.2)
 
 (generate_opam_files true)
 
@@ -20,6 +20,6 @@
  (name grewpy_backend)
  (synopsis "The Ocaml backend for the `grewpy` Python lib")
  (description "The Ocaml backend for the `grewpy` Python lib (https://pypi.org/project/grewpy)")
- (depends ocaml dune ANSITerminal libcaml-amr containers yojson libcaml-conll libcaml-grew)
+ (depends ocaml dune ANSITerminal amr containers yojson libcaml-conll libcaml-grew)
  (tags
   ("Grew" "Graph rewriting" "Python binding")))
