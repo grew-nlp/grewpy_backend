@@ -5,8 +5,12 @@ open Libgrew
 
 module Int_map = Map.Make (struct type t=int let compare=Stdlib.compare end)
 
+exception Json_error of Yojson.Basic.t
 
-exception Error of string
+let json_error msg = raise (Json_error (`String msg))
+
+let ok data = `Assoc [ ("status", `String "OK"); ("data", data) ]
+
 
 (* ==================================================================================================== *)
 module Utils = struct
@@ -55,7 +59,7 @@ module Global = struct
     !grs_max
   let grs_get index =
     try Int_map.find index !grs_map
-    with Not_found -> raise (Error "Reference to an undefined grs")
+    with Not_found -> json_error "Reference to an undefined grs"
 
 
   (* the [corpora_map] stores corpora loaded by Python *)
@@ -69,7 +73,7 @@ module Global = struct
 
   let corpus_get index =
     try Int_map.find index !corpora_map 
-    with Not_found -> raise (Error "Reference to an undefined corpus")
+    with Not_found -> json_error "Reference to an undefined corpus"
 end
 
 (* ==================================================================================================== *)

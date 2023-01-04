@@ -15,11 +15,11 @@ depends: [
   "ocaml"
   "dune" {>= "3.5"}
   "ANSITerminal"
-  "amr"
+  "amr" {>= "0.6.0"}
   "containers"
   "yojson"
   "libcaml-conll"
-  "libcaml-grew"
+  "libcaml-grew" {>= "1.10.1"}
   "odoc" {with-doc}
 ]
 build: [
