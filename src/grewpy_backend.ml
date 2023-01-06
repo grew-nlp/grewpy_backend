@@ -35,7 +35,7 @@ let run_command_exc request =
       | None -> failwith "no 'command' in request"
     with _ -> json_error (sprintf "Cannot parse command in request: %s" request) in
 
-    
+
   try
     match command with
     (* ======================= set_config ======================= *)
@@ -146,7 +146,7 @@ let run_command_exc request =
 
       let corpus = Global.corpus_get corpus_index in
       let clustered_solutions = 
-        Corpus.search 
+        Corpus.search ~json_label:true
           ~config 
           [] 
           (fun sent_id graph matching acc -> `Assoc [
