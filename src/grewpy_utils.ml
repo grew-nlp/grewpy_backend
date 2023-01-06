@@ -1,6 +1,6 @@
 open Printf
 
-open Conllx
+open Conll
 open Libgrew
 
 module Int_map = Map.Make (struct type t=int let compare=Stdlib.compare end)
@@ -42,7 +42,7 @@ end
 (* ==================================================================================================== *)
 module Global = struct
 
-  let config = ref (Conllx_config.build "ud")
+  let config = ref (Conll_config.build "ud")
 
   let debug = ref false
 

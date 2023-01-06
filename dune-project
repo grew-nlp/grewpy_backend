@@ -1,7 +1,7 @@
 (lang dune 3.5)
 
 (name grewpy_backend)
-(version 0.1.2)
+(version 0.1.3)
 
 (generate_opam_files true)
 
@@ -28,7 +28,7 @@
   containers 
   yojson 
   libcaml-conll 
-  (libcaml-grew (>= 1.10.1))
+  (libcaml-grew (>= 1.10.2))
   )
  (tags
   ("Grew" "Graph rewriting" "Python binding")))

@@ -1,7 +1,7 @@
 open Printf
 open Yojson.Basic.Util
 
-open Conllx
+open Conll
 open Grew_types
 open Libgrew
 
@@ -44,7 +44,7 @@ let run_command_exc request =
         json
         |> member "config"
         |> to_string in
-      Global.config := Conllx_config.build config;
+      Global.config := Conll_config.build config;
       ok `Null
 
     (* ======================= load_grs ======================= *)
@@ -68,7 +68,7 @@ let run_command_exc request =
         | None -> files
         | Some dir -> List.map (fun file -> Filename.concat dir file) files in
 
-      let conll_corpus = Conllx_corpus.load_list ~quiet:true ~config complete_files in
+      let conll_corpus = Conll_corpus.load_list ~quiet:true ~config complete_files in
       let corpus = Corpus.of_conllx_corpus conll_corpus in
 
       let index = Global.corpus_add corpus in
@@ -292,8 +292,8 @@ let run_command_exc request =
     | "graph_to_conll" ->
       json
       |> member "graph"
-      |> Conllx.of_json
-      |> Conllx.to_string ~config
+      |> Conll.of_json
+      |> Conll.to_string ~config
       |> (fun s -> `String s)
       |> ok
 
@@ -310,7 +310,7 @@ let run_command_exc request =
   with
   | Json_error js -> raise (Json_error js)
   | Libgrew.Error msg -> json_error (sprintf "libgrew error: %s" msg)
-  | Conllx_error js -> raise (Json_error js)
+  | Conll_error js -> raise (Json_error js)
   | exc -> json_error (sprintf " Unexpected error: %s"(Printexc.to_string exc))
 
 let run_command request =
