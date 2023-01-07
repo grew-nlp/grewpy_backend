@@ -27,7 +27,7 @@
   (amr (>= 0.6.0))
   containers 
   yojson 
-  libcaml-conll 
+  conll 
   (libcaml-grew (>= 1.10.2))
   )
  (tags
