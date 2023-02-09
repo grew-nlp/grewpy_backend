@@ -185,6 +185,19 @@ let run_command_exc request =
         clustered_count in
       ok json
 
+      (* ======================= corpus_count ======================= *)
+    | "corpus_to_conll" ->
+      let corpus_index = json |> member "corpus_index" |> to_int in
+      let corpus = Global.corpus_get corpus_index in
+      let buff = Buffer.create 32 in
+      Corpus.iteri
+        (fun _ _ graph -> 
+          bprintf buff "%s\n" (graph |> Graph.to_json |> Conll.of_json |> Conll.to_string ~config)
+        ) corpus;
+      let conll = Buffer.contents buff in
+      let json = `String conll in
+      ok json
+
     (* ======================= grs_run_graph ======================= *)
     | "grs_run_graph" ->
       begin
