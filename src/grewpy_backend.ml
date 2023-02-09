@@ -3,6 +3,7 @@ open Yojson.Basic.Util
 
 open Conll
 open Grew_types
+open Dep2pict
 open Libgrew
 
 open Grewpy_utils
@@ -301,7 +302,18 @@ let run_command_exc request =
       |> Grs.to_json ~config
       |> ok
 
-    (* ======================= graph_to_conll ======================= *)
+    (* ======================= graph_to_svg ======================= *)
+    | "graph_to_svg" ->
+      json
+      |> member "graph"
+      |> Graph.of_json
+      |> Graph.to_dep ~config
+      |> Dep2pict.from_dep
+      |> Dep2pict.to_svg
+      |> (fun s -> `String s)
+      |> ok
+
+      (* ======================= graph_to_conll ======================= *)
     | "graph_to_conll" ->
       json
       |> member "graph"

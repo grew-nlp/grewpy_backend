@@ -27,7 +27,8 @@
   (amr (>= 0.6.0))
   containers 
   yojson 
-  conll 
+  conll
+  libcaml-dep2pict
   (libcaml-grew (>= 1.10.2))
   )
  (tags

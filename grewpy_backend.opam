@@ -19,6 +19,7 @@ depends: [
   "containers"
   "yojson"
   "conll"
+  "libcaml-dep2pict"
   "libcaml-grew" {>= "1.10.2"}
   "odoc" {with-doc}
 ]
