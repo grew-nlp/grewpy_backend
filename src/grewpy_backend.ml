@@ -362,11 +362,11 @@ let _ =
     try Sock.start !Global.port with
     | Unix.Unix_error (Unix.EADDRINUSE,_,_) ->
       (* normal terminaison for automatic search of available port *)
-      printf "[Grewpy] Port %d already used, failed to open socket\n" !Global.port; exit 0
+      eprintf "[Grewpy] Port %d already used, failed to open socket\n" !Global.port; exit 0
     | Unix.Unix_error (error,_,_) ->
-      printf "[Grewpy] Unix error: %s\n" (Unix.error_message error); exit 1
+      eprintf "[Grewpy] Unix error: %s\n" (Unix.error_message error); exit 1
     | exc ->
-      printf "[Grewpy] Unexpected error: %s\n" (Printexc.to_string exc); exit 1
+      eprintf "[Grewpy] Unexpected error: %s\n" (Printexc.to_string exc); exit 1
   in
 
   let m = Mutex.create () in

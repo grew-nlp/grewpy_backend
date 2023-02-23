@@ -84,7 +84,7 @@ module Debug = struct
 
   let log_ msg =
     if !Global.debug
-    then printf "[grewpy - %s] %s\n%!" (get_time ()) msg
+    then eprintf "[grewpy - %s] %s\n%!" (get_time ()) msg
 
   let log msg = ksprintf log_ msg
 end
