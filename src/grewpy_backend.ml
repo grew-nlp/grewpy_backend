@@ -76,6 +76,12 @@ let run_command_exc request =
       let data = `Assoc [("index", `Int index); ("length", `Int (Corpus.size corpus)) ] in
       ok data
 
+    (* ======================= corpus_clean ======================= *)
+    | "corpus_clean" ->
+      let index = json |> member "corpus_index" |> to_int in
+      let _ = Global.corpus_clean index in
+      ok `Null
+
     (* ======================= corpus_from_dict ======================= *)
     | "corpus_from_dict" ->
       begin

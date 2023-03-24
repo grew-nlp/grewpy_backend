@@ -74,6 +74,10 @@ module Global = struct
   let corpus_get index =
     try Int_map.find index !corpora_map 
     with Not_found -> json_error "Reference to an undefined corpus"
+
+  let corpus_clean index =
+    corpora_map := Int_map.remove index !corpora_map;
+    Gc.major()
 end
 
 (* ==================================================================================================== *)
