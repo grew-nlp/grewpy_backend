@@ -1,3 +1,6 @@
+## 0.3.1 (2023/03/25)
+  - change library: `libcaml-dep2pict` &rarr; `dep2pictlib`
+
 # 0.3.0 (2023/03/25)
   - change library: `libcaml-grew` &rarr; `grewlib`
 

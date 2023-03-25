@@ -2,7 +2,7 @@ open Printf
 open Yojson.Basic.Util
 
 open Conll
-open Dep2pict
+open Dep2pictlib
 open Grewlib
 
 open Grewpy_utils
@@ -313,8 +313,8 @@ let run_command_exc request =
       |> member "graph"
       |> Graph.of_json
       |> Graph.to_dep ~config
-      |> Dep2pict.from_dep
-      |> Dep2pict.to_svg
+      |> Dep2pictlib.from_dep
+      |> Dep2pictlib.to_svg
       |> (fun s -> `String s)
       |> ok
 

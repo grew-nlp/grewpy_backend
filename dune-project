@@ -1,7 +1,7 @@
 (lang dune 3.5)
 
 (name grewpy_backend)
-(version 0.3.0)
+(version 0.3.1)
 
 (generate_opam_files true)
 
@@ -28,7 +28,7 @@
   containers 
   yojson 
   conll
-  libcaml-dep2pict
+  dep2pictlib
   (grewlib (>= 1.12.0))
   )
  (tags
