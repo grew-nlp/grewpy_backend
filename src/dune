@@ -2,4 +2,4 @@
  (name grewpy_backend)
  (public_name grewpy_backend)
  (package grewpy_backend)
- (libraries ANSITerminal str amr cairo2 camomile containers threads yojson conll dep2pict libgrew))
+ (libraries ANSITerminal str amr cairo2 camomile containers threads yojson conll dep2pict grewlib))

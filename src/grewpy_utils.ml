@@ -1,7 +1,7 @@
 open Printf
 
 open Conll
-open Libgrew
+open Grewlib
 
 module Int_map = Map.Make (struct type t=int let compare=Stdlib.compare end)
 

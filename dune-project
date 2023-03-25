@@ -1,7 +1,7 @@
 (lang dune 3.5)
 
 (name grewpy_backend)
-(version 0.2.0)
+(version 0.3.0)
 
 (generate_opam_files true)
 
@@ -29,7 +29,7 @@
   yojson 
   conll
   libcaml-dep2pict
-  (libcaml-grew (>= 1.10.2))
+  (grewlib (>= 1.12.0))
   )
  (tags
   ("Grew" "Graph rewriting" "Python binding")))

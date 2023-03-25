@@ -2,9 +2,8 @@ open Printf
 open Yojson.Basic.Util
 
 open Conll
-open Grew_types
 open Dep2pict
-open Libgrew
+open Grewlib
 
 open Grewpy_utils
 
@@ -340,7 +339,7 @@ let run_command_exc request =
     | command -> json_error (sprintf "command '%s' not found" command)
   with
   | Json_error js -> raise (Json_error js)
-  | Libgrew.Error msg -> json_error (sprintf "libgrew error: %s" msg)
+  | Grewlib.Error msg -> json_error (sprintf "grewlib error: %s" msg)
   | Conll_error js -> raise (Json_error js)
   | exc -> json_error (sprintf " Unexpected error: %s"(Printexc.to_string exc))
 
