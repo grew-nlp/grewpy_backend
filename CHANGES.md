@@ -1,3 +1,6 @@
+# 0.4.0 (2023/05/22)
+  - chose PORT automatically
+
 ## 0.3.1 (2023/03/25)
   - change library: `libcaml-dep2pict` &rarr; `dep2pictlib`
 

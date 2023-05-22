@@ -13,9 +13,9 @@ module Args = struct
     let rec loop = function
       | [] -> ()
       | "-d" :: tail | "--debug" :: tail -> Global.debug := true; loop tail
-      | "-p" :: p :: tail | "--port" :: p:: tail -> Global.port := int_of_string p; loop tail
+      | "-p" :: _ | "--port" :: _ -> failwith "--port option is removed, please upgrade grewpy"
       | "-c" :: c :: tail | "--caller" :: c :: tail-> Global.caller_pid := Some c; loop tail
-      | x :: _ -> failwith (sprintf "[Ars.parse] don't know what to do with arg: " ^ x)
+      | x :: _ -> failwith (sprintf "[Args.parse] don't know what to do with arg: " ^ x)
     in loop (List.tl (Array.to_list Sys.argv))
 end
 
@@ -146,12 +146,12 @@ let run_command_exc request =
       let request = Request.of_json ~config (json |> member "request") in
       let clustering_keys = 
         json 
-        |> member "clustering_keys" 
-        |> to_list 
+        |> member "clustering_keys"
+        |> to_list
         |> List.map (fun x -> Key (to_string x)) in
 
       let corpus = Global.corpus_get corpus_index in
-      let clustered_solutions = 
+      let clustered_solutions =
         Corpus.search ~json_label:true
           ~config 
           [] 
@@ -364,10 +364,10 @@ let _ =
       Periodic.start 10 stop_if_caller_is_dead in
 
   let socket =
-    try Sock.start !Global.port with
+    try Sock.start () with
     | Unix.Unix_error (Unix.EADDRINUSE,_,_) ->
       (* normal terminaison for automatic search of available port *)
-      eprintf "[Grewpy] Port %d already used, failed to open socket\n" !Global.port; exit 0
+      eprintf "[Grewpy] Port already used, failed to open socket\n"; exit 1
     | Unix.Unix_error (error,_,_) ->
       eprintf "[Grewpy] Unix error: %s\n" (Unix.error_message error); exit 1
     | exc ->
