@@ -76,6 +76,19 @@ module Global = struct
   let corpus_clean index =
     corpora_map := Int_map.remove index !corpora_map;
     Gc.major()
+
+  (* the [request_map] stores (abstract) request loaded by Python *)
+  let (request_map: Request.t Int_map.t ref) = ref Int_map.empty
+  let request_max = ref 0
+
+  let request_add request =
+    incr request_max;
+    request_map := Int_map.add !request_max request !request_map;
+    !request_max
+
+  let request_get index =
+    try Int_map.find index !request_map 
+    with Not_found -> json_error "Reference to an undefined request"
 end
 
 (* ==================================================================================================== *)

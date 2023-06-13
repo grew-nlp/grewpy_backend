@@ -175,7 +175,10 @@ let run_command_exc request =
     (* ======================= corpus_count ======================= *)
     | "corpus_count" ->
       let corpus_index = json |> member "corpus_index" |> to_int in
-      let request = Request.of_json ~config (json |> member "request") in
+      let request = 
+        match json |> member "request" with
+        | `Assoc ["index", `Int index] -> Global.request_get index 
+        | x -> Request.of_json ~config x in
       let clustering_keys = 
         json 
         |> member "clustering_keys" 
@@ -298,7 +301,7 @@ let run_command_exc request =
         with Not_one sent_id -> json_error (sprintf "Not one solution with sent_id = `%s`" sent_id)
       end
 
-      (* ======================= json_grs ======================= *)
+    (* ======================= json_grs ======================= *)
     | "json_grs" ->
       json
       |> member "grs_index"
@@ -336,6 +339,15 @@ let run_command_exc request =
       |> Graph.to_json
       |> ok
 
+    (* ======================= request_parse ======================= *)
+    | "request_parse" ->
+      json
+      |> member "request"
+      |> to_string
+      |> Request.parse ~config
+      |> Global.request_add
+      |> (fun index -> `Assoc [("index", `Int index)])
+      |> ok
     | command -> json_error (sprintf "command '%s' not found" command)
   with
   | Json_error js -> raise (Json_error js)
