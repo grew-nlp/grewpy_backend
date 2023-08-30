@@ -143,7 +143,10 @@ let run_command_exc request =
     (* ======================= corpus_search ======================= *)
     | "corpus_search" ->
       let corpus_index = json |> member "corpus_index" |> to_int in
-      let request = Request.of_json ~config (json |> member "request") in
+      let request = 
+        match json |> member "request" with
+        | `Assoc ["index", `Int index] -> Global.request_get index 
+        | x -> Request.of_json ~config x in
       let clustering_keys = 
         json 
         |> member "clustering_keys"
