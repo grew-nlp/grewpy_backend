@@ -321,7 +321,16 @@ let run_command_exc request =
       |> (fun s -> `String s)
       |> ok
 
-      (* ======================= graph_to_conll ======================= *)
+    (* ======================= graph_to_dot ======================= *)
+    | "graph_to_dot" ->
+      json
+      |> member "graph"
+      |> Graph.of_json
+      |> Graph.to_dot ~config
+      |> (fun s -> `String s)
+      |> ok
+
+    (* ======================= graph_to_conll ======================= *)
     | "graph_to_conll" ->
       json
       |> member "graph"
