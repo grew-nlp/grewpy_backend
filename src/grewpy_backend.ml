@@ -148,7 +148,7 @@ let run_command_exc request =
         json 
         |> member "clustering_keys"
         |> to_list
-        |> List.map (fun x -> Key (to_string x)) in
+        |> List.map (fun x -> Request.parse_cluster_item ~config request (to_string x)) in
 
       let corpus = Global.corpus_get corpus_index in
       let clustered_solutions =
@@ -183,7 +183,7 @@ let run_command_exc request =
         json 
         |> member "clustering_keys" 
         |> to_list
-        |> List.map (fun x -> Key (to_string x)) in
+        |> List.map (fun x -> Request.parse_cluster_item ~config request (to_string x)) in
       let corpus = Global.corpus_get corpus_index in
       let clustered_count = Corpus.search ~config 0 (fun _ _ _ acc -> acc + 1) request clustering_keys corpus in
       let (json : Yojson.Basic.t) = Clustered.fold_layer
