@@ -143,6 +143,7 @@ let run_command_exc request =
     (* ======================= corpus_search ======================= *)
     | "corpus_search" ->
       let corpus_index = json |> member "corpus_index" |> to_int in
+      let build_deco = json |> member "build_deco" |> to_bool in
       let request = 
         match json |> member "request" with
         | `Assoc ["index", `Int index] -> Global.request_get index 
@@ -158,10 +159,17 @@ let run_command_exc request =
         Corpus.search ~json_label:true
           ~config 
           [] 
-          (fun sent_id graph matching acc -> `Assoc [
-            ("sent_id", `String sent_id);
-            ("matching", Matching.to_json request graph matching)
-            ] :: acc
+          (fun sent_id graph matching acc ->
+            let deco_json = 
+              if build_deco
+              then 
+                let deco = Matching.build_deco request matching in
+                [("deco", `Int (Global.deco_add deco))]
+             else [] in
+            `Assoc ([
+              ("sent_id", `String sent_id);
+              ("matching", Matching.to_json request graph matching)
+            ]@deco_json) :: acc
           )
           request 
           clustering_keys 
@@ -172,9 +180,10 @@ let run_command_exc request =
         (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
         (fun x -> `Assoc x)
         clustered_solutions in
-  
       ok json
-      
+
+
+
     (* ======================= corpus_count ======================= *)
     | "corpus_count" ->
       let corpus_index = json |> member "corpus_index" |> to_int in
@@ -315,10 +324,15 @@ let run_command_exc request =
 
     (* ======================= graph_to_svg ======================= *)
     | "graph_to_svg" ->
+      let graph_to_dep g = match json |> member "deco" with
+        | `Int deco_id -> 
+          let deco = Global.deco_get deco_id in
+          Graph.to_dep ~deco ~config g
+        | _ -> Graph.to_dep ~config g in
       json
       |> member "graph"
       |> Graph.of_json
-      |> Graph.to_dep ~config
+      |> graph_to_dep
       |> Dep2pictlib.from_dep
       |> Dep2pictlib.to_svg
       |> (fun s -> `String s)

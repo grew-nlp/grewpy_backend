@@ -89,6 +89,21 @@ module Global = struct
   let request_get index =
     try Int_map.find index !request_map 
     with Not_found -> json_error "Reference to an undefined request"
+
+
+  (* the [deco_map] stores (abstract) deco loaded by Python *)
+  let (deco_map: Deco.t Int_map.t ref) = ref Int_map.empty
+  let deco_max = ref 0
+
+  let deco_add deco =
+    incr deco_max;
+    deco_map := Int_map.add !deco_max deco !deco_map;
+    !deco_max
+
+  let deco_get index =
+    try Int_map.find index !deco_map 
+    with Not_found -> json_error "Reference to an undefined deco"
+
 end
 
 (* ==================================================================================================== *)
