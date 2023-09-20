@@ -339,6 +339,20 @@ let run_command_exc request =
       |> (fun s -> `String s)
       |> ok
 
+      (* ======================= graph_to_sentence ======================= *)
+    | "graph_to_sentence" ->
+      let graph_to_sentence g = match json |> member "deco" with
+        | `Int deco_id -> 
+          let deco = Global.deco_get deco_id in
+          Graph.to_sentence ~deco g
+        | _ -> Graph.to_sentence g in
+      json
+      |> member "graph"
+      |> Graph.of_json
+      |> graph_to_sentence
+      |> (fun s -> `String s)
+      |> ok
+
     (* ======================= graph_to_dot ======================= *)
     | "graph_to_dot" ->
       json
