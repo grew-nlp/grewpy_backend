@@ -1,3 +1,6 @@
+## 0.5.1 (2023/09/20)
+  - add function graph_to_svg and graph_to_sentence
+
 # 0.5.0 (2023/09/16)
   - new grewlib version
 
