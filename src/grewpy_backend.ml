@@ -324,11 +324,12 @@ let run_command_exc request =
 
     (* ======================= graph_to_svg ======================= *)
     | "graph_to_svg" ->
+      let no_root = json |> member "draw_root" |> to_bool |> not in
       let graph_to_dep g = match json |> member "deco" with
-        | `Int deco_id -> 
+        | `Int deco_id ->
           let deco = Global.deco_get deco_id in
-          Graph.to_dep ~deco ~config g
-        | _ -> Graph.to_dep ~config g in
+          Graph.to_dep ~deco ~no_root ~config g
+        | _ -> Graph.to_dep  ~no_root ~config g in
       json
       |> member "graph"
       |> Graph.of_json
