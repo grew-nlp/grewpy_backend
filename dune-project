@@ -1,7 +1,7 @@
 (lang dune 3.5)
 
 (name grewpy_backend)
-(version 0.5.1)
+(version 0.5.2)
 
 (generate_opam_files true)
 
