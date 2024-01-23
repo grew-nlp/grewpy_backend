@@ -153,35 +153,70 @@ let run_command_exc request =
         |> member "clustering_keys"
         |> to_list
         |> List.map (fun x -> Request.parse_cluster_item ~config request (to_string x)) in
+      let bound = json |> member "bound" |> to_int_option in
+      let timeout = json |> member "timeout" |> to_number_option in
 
       let corpus = Global.corpus_get corpus_index in
-      let clustered_solutions =
-        Corpus.search ~json_label:true
-          ~config 
-          [] 
-          (fun sent_id graph matching acc ->
-            let deco_json = 
-              if build_deco
-              then 
-                let deco = Matching.build_deco request matching in
-                [("deco", `Int (Global.deco_add deco))]
-             else [] in
-            `Assoc ([
-              ("sent_id", `String sent_id);
-              ("matching", Matching.to_json request graph matching)
-            ]@deco_json) :: acc
-          )
-          request 
-          clustering_keys 
-          corpus in
-      let (json : Yojson.Basic.t) = Clustered.fold_layer
-        (fun x -> `List x)
-        []
-        (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
-        (fun x -> `Assoc x)
-        clustered_solutions in
-      ok json
-
+        begin
+          match (bound, timeout) with
+          | (None, None) ->
+          let clustered_solutions =
+            Corpus.search ~json_label:true
+              ~config 
+              [] 
+              (fun sent_id graph matching acc ->
+                let deco_json = 
+                  if build_deco
+                  then 
+                    let deco = Matching.build_deco request matching in
+                    [("deco", `Int (Global.deco_add deco))]
+                 else [] in
+                `Assoc ([
+                  ("sent_id", `String sent_id);
+                  ("matching", Matching.to_json request graph matching)
+                ]@deco_json) :: acc
+              )
+              request 
+              clustering_keys 
+              corpus in
+          let (json : Yojson.Basic.t) = Clustered.fold_layer
+            (fun x -> `List x)
+            []
+            (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
+            (fun x -> `Assoc x)
+            clustered_solutions in
+            ok json
+          | _ ->
+            let (clustered_solutions, _, _) =
+              Corpus.bounded_search ~json_label:true
+                ~config 
+                bound
+                timeout
+                [] 
+                (fun _ sent_id graph _ _ matching acc ->
+                  let deco_json = 
+                    if build_deco
+                    then 
+                      let deco = Matching.build_deco request matching in
+                      [("deco", `Int (Global.deco_add deco))]
+                   else [] in
+                  `Assoc ([
+                    ("sent_id", `String sent_id);
+                    ("matching", Matching.to_json request graph matching)
+                  ]@deco_json) :: acc
+                )
+                request 
+                clustering_keys 
+                corpus in
+            let (json : Yojson.Basic.t) = Clustered.fold_layer
+              (fun x -> `List x)
+              []
+              (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
+              (fun x -> `Assoc x)
+              clustered_solutions in
+              ok json
+  
+        end
 
 
     (* ======================= corpus_count ======================= *)
