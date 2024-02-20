@@ -1,7 +1,7 @@
 (lang dune 3.5)
 
 (name grewpy_backend)
-(version 0.5.2)
+(version 0.5.3)
 
 (generate_opam_files true)
 
@@ -23,6 +23,7 @@
  (depends
   ocaml 
   dune 
+  dune-build-info
   ANSITerminal 
   (amr (>= 0.6.0))
   containers 

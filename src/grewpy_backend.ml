@@ -38,6 +38,13 @@ let run_command_exc request =
 
   try
     match command with
+    (* ======================= get_version ======================= *)
+    | "get_version" ->
+      let version = match Build_info.V1.version () with
+      | Some v -> Build_info.V1.Version.to_string v
+      | None -> "unknown"
+    in ok (`String version)
+
     (* ======================= set_config ======================= *)
     | "set_config" ->
       let config = 

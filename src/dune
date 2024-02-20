@@ -1,6 +1,18 @@
 (executable
- (name grewpy_backend)
+(name grewpy_backend)
  (public_name grewpy_backend)
  (package grewpy_backend)
- (libraries ANSITerminal str amr cairo2 containers threads yojson conll dep2pictlib grewlib)
+ (libraries 
+  ANSITerminal
+  str
+  dune-build-info
+  amr
+  cairo2
+  containers
+  threads
+  yojson
+  conll
+  dep2pictlib
+  grewlib
+ )
 )
