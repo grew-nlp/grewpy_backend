@@ -431,6 +431,16 @@ let run_command_exc request =
       |> Global.request_add
       |> (fun index -> `Assoc [("index", `Int index)])
       |> ok
+
+    (* ======================= request_named_entities ======================= *)
+    | "request_named_entities" ->
+      let request = 
+        match json |> member "request" with
+        | `Assoc ["index", `Int index] -> Global.request_get index 
+        | x -> Request.of_json ~config x in
+      Request.json_bound_names request
+      |> ok
+
     | command -> json_error (sprintf "command '%s' not found" command)
   with
   | Json_error js -> raise (Json_error js)
