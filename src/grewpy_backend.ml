@@ -248,7 +248,7 @@ let run_command_exc request =
         clustered_count in
       ok json
 
-      (* ======================= corpus_count ======================= *)
+      (* ======================= corpus_to_conll ======================= *)
     | "corpus_to_conll" ->
       let corpus_index = json |> member "corpus_index" |> to_int in
       let corpus = Global.corpus_get corpus_index in
@@ -261,6 +261,33 @@ let run_command_exc request =
       let json = `String conll in
       ok json
 
+    (* ======================= corpus_count_feature_values ======================= *)
+    | "corpus_count_feature_values" ->
+      let corpus_index = json |> member "corpus_index" |> to_int in
+      let corpus = Global.corpus_get corpus_index in
+      let filter = match (json |> member "include", json |> member "exclude") with
+        | (`Null, s) ->
+          let excl_list = s |> to_list |> (List.map to_string) in
+          (fun x -> not (List.mem x excl_list))
+        | (s,_) ->
+          let incl_list = s |> to_list |> (List.map to_string) in
+          (fun x -> List.mem x incl_list) in
+      let cfv = Corpus.count_feature_values ~filter corpus in
+      `Assoc (String_map.fold 
+        (fun feat_name sub acc ->
+          (
+            feat_name, 
+            `Assoc
+              (String_map.fold 
+                (fun feat_value count acc2 ->
+                  (feat_value, `Int count) :: acc2
+                ) sub []
+              )
+          ) :: acc
+        ) cfv []
+      )
+      |> ok
+    
     (* ======================= grs_run_graph ======================= *)
     | "grs_run_graph" ->
       begin
