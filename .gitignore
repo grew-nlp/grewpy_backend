@@ -1,2 +1,4 @@
 _build
 switch_*.sh
+.DS_Store
+

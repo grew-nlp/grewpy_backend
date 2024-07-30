@@ -1,3 +1,10 @@
+## 0.5.4 (2024/07/30)
+  - add services `request_named_entities` and `corpus_count_feature_values`
+
+## 0.5.3 (2024/02/20)
+  - take bound and timeout into account in `corpus_search`
+  - add service `get_version`
+
 ## 0.5.2 (2023/12/07)
   - remove camomile in dependencies
 
