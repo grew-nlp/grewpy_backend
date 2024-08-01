@@ -46,6 +46,8 @@ module Global = struct
 
   let debug = ref false
 
+  let (requested_port : int option ref) = ref None
+
   let (caller_pid: string option ref) = ref None
 
   (* the [grs_map] stores grs loaded by Python *)
@@ -122,13 +124,13 @@ end
 (* ==================================================================================================== *)
 module Sock = struct
 
-  let start () =
+  let start ?(requested_port=0) () =
     (* create the socket *)
     let socket = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
     let _ = Debug.log "Socket created" in
 
     (* bind the socket to the host machine on the given port *)
-    let () = Unix.bind socket (Unix.ADDR_INET (Unix.inet_addr_loopback, 0)) in
+    let () = Unix.bind socket (Unix.ADDR_INET (Unix.inet_addr_loopback, requested_port)) in
     let port =
       match Unix.getsockname socket with
       | Unix.ADDR_INET (_,p) -> p

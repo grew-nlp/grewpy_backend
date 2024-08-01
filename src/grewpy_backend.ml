@@ -13,7 +13,7 @@ module Args = struct
     let rec loop = function
       | [] -> ()
       | "-d" :: tail | "--debug" :: tail -> Global.debug := true; loop tail
-      | "-p" :: _ | "--port" :: _ -> failwith "--port option is removed, please upgrade grewpy"
+      | "-p" :: v :: tail | "--port" :: v :: tail -> Global.requested_port := Some (int_of_string v); loop tail
       | "-c" :: c :: tail | "--caller" :: c :: tail-> Global.caller_pid := Some c; loop tail
       | x :: _ -> failwith (sprintf "[Args.parse] don't know what to do with arg: " ^ x)
     in loop (List.tl (Array.to_list Sys.argv))
@@ -496,7 +496,7 @@ let _ =
       Periodic.start 10 stop_if_caller_is_dead in
 
   let socket =
-    try Sock.start () with
+    try Sock.start ?requested_port:!Global.requested_port () with
     | Unix.Unix_error (Unix.EADDRINUSE,_,_) ->
       (* normal terminaison for automatic search of available port *)
       eprintf "[Grewpy] Port already used, failed to open socket\n"; exit 1
