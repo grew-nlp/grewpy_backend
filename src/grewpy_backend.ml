@@ -147,6 +147,14 @@ let run_command_exc request =
       let sent_ids = Corpus.fold_right (fun sent_id _ acc -> (`String sent_id) :: acc) corpus [] in
       `Assoc [("status", `String "OK"); ("data", `List (sent_ids))]
 
+    (* ======================= corpus_columns ======================= *)
+    | "corpus_columns" ->
+      let corpus = json |> member "corpus_index" |> to_int |> Global.corpus_get in
+      let data = 
+        Corpus.get_columns_opt corpus
+        |> (function None -> `Null | Some s -> `String (s |> Conll_columns.to_list |> String.concat " ")) in
+      `Assoc [("status", `String "OK"); ("data", data)]
+
     (* ======================= corpus_search ======================= *)
     | "corpus_search" ->
       let corpus_index = json |> member "corpus_index" |> to_int in
@@ -394,11 +402,14 @@ let run_command_exc request =
     (* ======================= graph_to_svg ======================= *)
     | "graph_to_svg" ->
       let no_root = json |> member "draw_root" |> to_bool |> not in
+      let exclude = json |> member "exclude" |> to_list |> List.map to_string in
+      (* let exclude = ["textform"] in *)
+      let filter s = not (List.mem s exclude) in
       let graph_to_dep g = match json |> member "deco" with
         | `Int deco_id ->
           let deco = Global.deco_get deco_id in
-          Graph.to_dep ~deco ~no_root ~config g
-        | _ -> Graph.to_dep  ~no_root ~config g in
+          Graph.to_dep ~filter ~deco ~no_root ~config g
+        | _ -> Graph.to_dep ~filter ~no_root ~config g in
       json
       |> member "graph"
       |> Graph.of_json
@@ -439,6 +450,19 @@ let run_command_exc request =
       |> Conll.to_string ~config
       |> (fun s -> `String s)
       |> ok
+
+    (* ======================= graph_to_conllup ======================= *)
+    | "graph_to_conllup" -> 
+      let columns = match json |> member "columns" with
+      | `String cols -> Some (cols |> CCString.split_on_char ' ' |> Conll_columns.of_list)
+      | _ -> None in
+      json
+      |> member "graph"
+      |> Conll.of_json
+      |> Conll.to_string ?columns ~config
+      |> (fun s -> `String s)
+      |> ok
+
 
     (* ======================= graph_load ======================= *)
     | "graph_load" ->
