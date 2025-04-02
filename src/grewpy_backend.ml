@@ -195,6 +195,7 @@ let run_command_exc request =
               clustering_keys 
               corpus in
           let (json : Yojson.Basic.t) = Clustered.fold_layer
+            []
             (fun x -> `List x)
             []
             (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
@@ -224,6 +225,7 @@ let run_command_exc request =
                 clustering_keys 
                 corpus in
             let (json : Yojson.Basic.t) = Clustered.fold_layer
+              []
               (fun x -> `List x)
               []
               (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
@@ -249,6 +251,7 @@ let run_command_exc request =
       let corpus = Global.corpus_get corpus_index in
       let clustered_count = Corpus.search ~config 0 (fun _ _ _ acc -> acc + 1) request clustering_keys corpus in
       let (json : Yojson.Basic.t) = Clustered.fold_layer
+        0
         (fun x -> `Int x)
         []
         (fun string_opt sub acc -> (CCOption.get_or ~default:"__undefined__" string_opt, sub) :: acc)
@@ -403,7 +406,6 @@ let run_command_exc request =
     | "graph_to_svg" ->
       let no_root = json |> member "draw_root" |> to_bool |> not in
       let exclude = json |> member "exclude" |> to_list |> List.map to_string in
-      (* let exclude = ["textform"] in *)
       let filter s = not (List.mem s exclude) in
       let graph_to_dep g = match json |> member "deco" with
         | `Int deco_id ->

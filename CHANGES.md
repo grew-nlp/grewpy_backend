@@ -1,3 +1,6 @@
+# 0.6.0 (2024/04/02)
+  - grewlib version 1.17
+
 ## 0.5.4 (2024/07/30)
   - add services `request_named_entities` and `corpus_count_feature_values`
 
