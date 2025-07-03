@@ -1,3 +1,6 @@
+## 0.6.1 (2025/07/03)
+  - Fix bug in to_svg
+
 # 0.6.0 (2024/04/02)
   - grewlib version 1.17
 

@@ -405,7 +405,10 @@ let run_command_exc request =
     (* ======================= graph_to_svg ======================= *)
     | "graph_to_svg" ->
       let no_root = json |> member "draw_root" |> to_bool |> not in
-      let exclude = json |> member "exclude" |> to_list |> List.map to_string in
+      let exclude = 
+        match json |> member "exclude" with
+        | `List l -> List.map to_string l
+        | _ -> [] in 
       let filter s = not (List.mem s exclude) in
       let graph_to_dep g = match json |> member "deco" with
         | `Int deco_id ->
